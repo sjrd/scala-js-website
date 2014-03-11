@@ -186,14 +186,15 @@ gives:
     [error]    ^
     [error] one error found
 
-Hint to recognize this error: the methods are named `$js$exported$method$`
+Hint to recognize this error: the methods are named `$js$exported$meth$`
 followed by the JavaScript export name.
 
 ## Exporting properties
 
 `val`s, `var`s and `def`s without parentheses, as well as `def`s whose name
-ends with `_=` are exported to JavaScript as properties with getters and/or
-setters using, again, the `@JSExport` annotation.
+ends with `_=`, have a single argument and `Unit` result type, are
+exported to JavaScript as properties with getters and/or setters
+using, again, the `@JSExport` annotation.
 
 Given this weird definition of a halfway mutable point:
 
@@ -236,3 +237,35 @@ JS name must be specified *without* the trailing `_=`.
 `def` setters must have a result type of `Unit` and exactly one parameter. Note
 that several `def` setters with different types for their argument can be
 exported under a single, overloaded JavaScript name.
+
+In case you overload properties in a way the compiler cannot
+disambiguate, the methods in the error messages will be prefixed by
+`$js$exported$prop$`.
+
+## Automatically exporting descendent objects
+Sometimes it is desirable to automatically export all descendent
+objects of a given trait or class. You can use the
+`@JSExportDescendentObjects` annotation. It will cause all descendent
+objects to be exported to their fully qualified name.
+
+This feature is especially useful in conjunction with exported
+abstract methods and is used by the test libraries of Scala.js. The
+following is just an example, how the feature can be used:
+
+{% highlight scala %}
+package foo.test
+
+@JSExportDescendentObjects
+trait Test {
+  @JSExport
+  def test(param: String): Unit
+}
+
+// automatically exported as foo.test.Test1
+object Test1 extends Test {
+  // exported through inheritance
+  def test(param: String) = {
+    println(param)
+  }
+}
+{% endhighlight %}
