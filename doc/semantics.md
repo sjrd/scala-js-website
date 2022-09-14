@@ -93,10 +93,10 @@ bugs are reported as exceptions.
 Currently known exhaustive list of exceptions are:
 
 * `NullPointerException`
-* `ArrayIndexOutOfBoundsException` and `StringIndexOutOfBoundsException`
 * `ClassCastException`
-* `ArrayStoreException`
-* `StackOverflowError` and other `VirtualMachineError`s
+* `StringIndexOutOfBoundsException`
+* Array-related errors: `ArrayIndexOutOfBoundsException`, `ArrayStoreException` and `NegativeArraySizeException`
+* Memory-related errors: `StackOverflowError` and `OutOfMemoryError`
 
 Because Scala.js does not receive VM support to detect such erroneous
 conditions, checking them is typically too expensive.
